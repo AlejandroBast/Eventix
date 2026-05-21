@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Validar acceso | Eventix{% endblock %}
+
+{% block content %}
+<div class="row g-4 align-items-start">
+  <div class="col-lg-5">
+    <section class="side-panel">
+      <p class="text-uppercase small fw-semibold text-primary mb-1">Control de acceso</p>
+      <h1 class="h3 mb-3">Validar entrada</h1>
+      <form method="post" class="vstack gap-3">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-dark" type="submit">
+          <i class="bi bi-qr-code-scan"></i> Validar codigo
+        </button>
+      </form>
+    </section>
+  </div>
+  <div class="col-lg-7">
+    <section class="detail-panel p-4">
+      <h2 class="h5">Resultado</h2>
+      {% if resultado %}
+        <p class="fs-5 mb-0">{{ resultado }}</p>
+      {% else %}
+        <p class="text-secondary mb-0">Cuando escanees o pegues un codigo, aqui aparecera el resultado de acceso.</p>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}
