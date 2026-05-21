@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard | Eventix{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-end gap-3 mb-4">
+  <div>
+    <p class="text-uppercase small fw-semibold text-primary mb-1">Panel administrativo</p>
+    <h1 class="h3 mb-0">Indicadores de eventos</h1>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a class="btn btn-outline-primary" href="{% url 'eventos_admin' %}"><i class="bi bi-calendar2-week"></i> Eventos</a>
+    <a class="btn btn-outline-primary" href="{% url 'tipos_admin' %}"><i class="bi bi-ticket-perforated"></i> Precios</a>
+    <a class="btn btn-dark" href="{% url 'validar_acceso' %}"><i class="bi bi-qr-code-scan"></i> Validar</a>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-sm-6 col-xl-3"><div class="stat"><span>Eventos</span><strong>{{ resumen.eventos }}</strong></div></div>
+  <div class="col-sm-6 col-xl-3"><div class="stat"><span>Entradas</span><strong>{{ resumen.entradas }}</strong></div></div>
+  <div class="col-sm-6 col-xl-3"><div class="stat"><span>Ingresos</span><strong>${{ resumen.ingresos }}</strong></div></div>
+  <div class="col-sm-6 col-xl-3"><div class="stat"><span>Accesos validos</span><strong>{{ resumen.validaciones }}</strong></div></div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-lg-7">
+    <section class="chart-panel">
+      <h2 class="h5">Entradas vendidas por evento</h2>
+      <canvas id="chartEventos" height="130"></canvas>
+    </section>
+  </div>
+  <div class="col-lg-5">
+    <section class="chart-panel">
+      <h2 class="h5">Validaciones de acceso</h2>
+      <canvas id="chartValidaciones" height="130"></canvas>
+    </section>
+  </div>
+  <div class="col-12">
+    <section class="chart-panel">
+      <h2 class="h5">Ingresos por mes</h2>
+      <canvas id="chartMes" height="80"></canvas>
+    </section>
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-lg-7">
+    <section class="data-panel p-3">
+      <h2 class="h5 mb-3">Eventos recientes</h2>
+      <div class="table-responsive">
+        <table class="table mb-0 align-middle">
+          <thead><tr><th>Evento</th><th>Estado</th><th>Ocupacion</th></tr></thead>
+          <tbody>
+            {% for evento in eventos %}
+              <tr>
+                <td>{{ evento.titulo }}</td>
+                <td>{{ evento.get_estado_display }}</td>
+                <td>{{ evento.porcentaje_ocupacion }}%</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+  <div class="col-lg-5">
+    <section class="data-panel p-3">
+      <h2 class="h5 mb-3">Entradas recientes</h2>
+      {% for entrada in entradas_recientes %}
+        <div class="recent-row">
+          <span>{{ entrada.evento.titulo }}</span>
+          <strong>{{ entrada.asistente.username }}</strong>
+        </div>
+      {% empty %}
+        <p class="text-secondary mb-0">Aun no hay entradas generadas.</p>
+      {% endfor %}
+    </section>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const charts = {{ charts_json|safe }};
+  const palette = ['#2563eb', '#0f766e', '#f59e0b', '#dc2626', '#7c3aed'];
+
+  new Chart(document.getElementById('chartEventos'), {
+    type: 'bar',
+    data: {
+      labels: charts.eventos_labels,
+      datasets: [{ label: 'Entradas', data: charts.eventos_data, backgroundColor: palette }]
+    },
+    options: { responsive: true, plugins: { legend: { display: false } } }
+  });
+
+  new Chart(document.getElementById('chartValidaciones'), {
+    type: 'doughnut',
+    data: {
+      labels: charts.validacion_labels,
+      datasets: [{ data: charts.validacion_data, backgroundColor: ['#0f766e', '#dc2626'] }]
+    }
+  });
+
+  new Chart(document.getElementById('chartMes'), {
+    type: 'line',
+    data: {
+      labels: charts.mes_labels,
+      datasets: [{ label: 'Ingresos', data: charts.mes_data, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, .12)', fill: true, tension: .35 }]
+    }
+  });
+</script>
+{% endblock %}
