@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Pago simulado | Eventix{% endblock %}
+
+{% block content %}
+<div class="checkout-panel mx-auto">
+  <p class="text-uppercase small fw-semibold text-primary mb-1">Pasarela simulada</p>
+  <h1 class="h3 mb-3">Confirmar orden #{{ orden.pk }}</h1>
+  <dl class="row">
+    <dt class="col-5">Evento</dt>
+    <dd class="col-7">{{ orden.evento.titulo }}</dd>
+    <dt class="col-5">Tipo</dt>
+    <dd class="col-7">{{ orden.tipo_entrada.nombre }}</dd>
+    <dt class="col-5">Cantidad</dt>
+    <dd class="col-7">{{ orden.cantidad }}</dd>
+    <dt class="col-5">Total</dt>
+    <dd class="col-7 fw-bold">${{ orden.total }}</dd>
+    <dt class="col-5">Estado</dt>
+    <dd class="col-7">{{ orden.get_estado_pago_display }}</dd>
+  </dl>
+  {% if orden.estado_pago == 'pendiente' %}
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn btn-success w-100" type="submit">
+        <i class="bi bi-check2-circle"></i> Aprobar pago simulado
+      </button>
+    </form>
+  {% else %}
+    <a class="btn btn-primary w-100" href="{% url 'mis_entradas' %}">Ver mis entradas</a>
+  {% endif %}
+</div>
+{% endblock %}
