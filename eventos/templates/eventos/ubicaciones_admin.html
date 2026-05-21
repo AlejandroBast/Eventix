@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Ubicaciones | Eventix{% endblock %}
+
+{% block content %}
+<div class="manager-heading">
+  <div>
+    <p class="text-uppercase small fw-semibold text-primary mb-1">Gestion</p>
+    <h1 class="h3 mb-0">Ubicaciones</h1>
+  </div>
+  <a class="btn btn-primary" href="{% url 'ubicacion_crear' %}"><i class="bi bi-plus-lg"></i> Crear ubicacion</a>
+</div>
+
+<div class="manager-tabs mb-3">
+  <a href="{% url 'eventos_admin' %}">Eventos</a>
+  <a href="{% url 'ubicaciones_admin' %}">Ubicaciones</a>
+  <a href="{% url 'categorias_admin' %}">Categorias</a>
+  <a href="{% url 'tipos_admin' %}">Tipos de entrada</a>
+</div>
+
+<div class="table-responsive data-panel">
+  <table class="table align-middle mb-0">
+    <thead><tr><th>Nombre</th><th>Ciudad</th><th>Direccion</th><th>Capacidad</th><th></th></tr></thead>
+    <tbody>
+      {% for ubicacion in ubicaciones %}
+        <tr>
+          <td>{{ ubicacion.nombre }}</td>
+          <td>{{ ubicacion.ciudad }}</td>
+          <td>{{ ubicacion.direccion }}</td>
+          <td>{{ ubicacion.capacidad }}</td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'ubicacion_editar' ubicacion.pk %}"><i class="bi bi-pencil"></i></a>
+            <a class="btn btn-sm btn-outline-danger" href="{% url 'ubicacion_eliminar' ubicacion.pk %}"><i class="bi bi-trash"></i></a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

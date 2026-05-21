@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}Mis entradas | Eventix{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <p class="text-uppercase small fw-semibold text-primary mb-1">Entradas</p>
+    <h1 class="h3 mb-0">Mis entradas</h1>
+  </div>
+  <a class="btn btn-outline-primary" href="{% url 'home' %}">
+    <i class="bi bi-calendar-event"></i> Ver eventos
+  </a>
+</div>
+
+<div class="table-responsive data-panel">
+  <table class="table align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Evento</th>
+        <th>Tipo</th>
+        <th>Estado</th>
+        <th>Codigo</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entrada in entradas %}
+        <tr>
+          <td>{{ entrada.evento.titulo }}</td>
+          <td>{{ entrada.tipo_entrada.nombre }}</td>
+          <td><span class="badge text-bg-light">{{ entrada.get_estado_display }}</span></td>
+          <td class="small">{{ entrada.codigo }}</td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'detalle_entrada' entrada.pk %}">
+              <i class="bi bi-qr-code"></i> QR
+            </a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="5" class="text-center text-secondary py-4">Todavia no tienes entradas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

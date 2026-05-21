@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar | Eventix{% endblock %}
+
+{% block content %}
+<div class="delete-panel mx-auto">
+  <p class="text-uppercase small fw-semibold text-danger mb-1">Confirmacion</p>
+  <h1 class="h3">Eliminar registro</h1>
+  <p class="text-secondary">Vas a eliminar <strong>{{ objeto }}</strong>. Esta accion no se puede deshacer.</p>
+  <form method="post" class="d-flex gap-2">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit"><i class="bi bi-trash"></i> Eliminar</button>
+    <a class="btn btn-outline-secondary" href="{% url 'dashboard' %}">Cancelar</a>
+  </form>
+</div>
+{% endblock %}

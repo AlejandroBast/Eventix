@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Entrada | Eventix{% endblock %}
+
+{% block content %}
+<div class="ticket-layout">
+  <section class="ticket-main">
+    <p class="text-uppercase small fw-semibold text-primary mb-1">Entrada digital</p>
+    <h1 class="h3">{{ entrada.evento.titulo }}</h1>
+    <p class="text-secondary mb-4">{{ entrada.evento.fecha_inicio|date:'d M Y - h:i a' }} · {{ entrada.evento.ubicacion.nombre }}</p>
+    <div class="row g-3">
+      <div class="col-sm-6">
+        <div class="metric">
+          <span>Asistente</span>
+          <strong>{{ entrada.asistente.get_full_name|default:entrada.asistente.username }}</strong>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="metric">
+          <span>Tipo</span>
+          <strong>{{ entrada.tipo_entrada.nombre }}</strong>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="metric">
+          <span>Estado</span>
+          <strong>{{ entrada.get_estado_display }}</strong>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="metric">
+          <span>Codigo</span>
+          <strong class="code-text">{{ entrada.codigo }}</strong>
+        </div>
+      </div>
+    </div>
+  </section>
+  <aside class="ticket-qr">
+    {% if entrada.qr_imagen %}
+      <img src="{{ entrada.qr_imagen.url }}" alt="QR de entrada">
+    {% endif %}
+    <span class="small text-secondary">Escanea este QR en el acceso.</span>
+  </aside>
+</div>
+{% endblock %}

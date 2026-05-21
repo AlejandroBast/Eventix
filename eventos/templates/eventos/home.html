@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Eventos | Eventix{% endblock %}
+
+{% block content %}
+<section class="mb-4">
+  <div class="d-flex flex-column flex-lg-row align-items-lg-end justify-content-between gap-3">
+    <div>
+      <p class="text-uppercase small fw-semibold text-primary mb-1">Eventos disponibles</p>
+      <h1 class="display-title mb-2">Compra y valida entradas con QR</h1>
+      <p class="text-secondary mb-0">Busca eventos, reserva tus entradas y recibe codigos listos para el control de acceso.</p>
+    </div>
+    {% if es_organizador %}
+      <a class="btn btn-primary" href="{% url 'evento_crear' %}">
+        <i class="bi bi-plus-lg"></i> Nuevo evento
+      </a>
+    {% endif %}
+  </div>
+</section>
+
+<form class="filter-bar row g-2 mb-4" method="get">
+  <div class="col-12 col-md-5">
+    <input class="form-control" type="search" name="q" value="{{ q }}" placeholder="Buscar por nombre">
+  </div>
+  <div class="col-12 col-md-3">
+    <select class="form-select" name="categoria">
+      <option value="">Todas las categorias</option>
+      {% for categoria in categorias %}
+        <option value="{{ categoria.id }}" {% if categoria_actual == categoria.id|stringformat:'s' %}selected{% endif %}>{{ categoria.nombre }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-12 col-md-2">
+    <input class="form-control" type="date" name="fecha" value="{{ fecha_actual }}">
+  </div>
+  <div class="col-12 col-md-2">
+    <button class="btn btn-dark w-100" type="submit">
+      <i class="bi bi-search"></i> Filtrar
+    </button>
+  </div>
+</form>
+
+<div class="row g-3">
+  {% for evento in eventos %}
+    <div class="col-12 col-md-6 col-xl-4">
+      <article class="event-card h-100">
+        {% if evento.imagen_url %}
+          <img src="{{ evento.imagen_url }}" alt="{{ evento.titulo }}" class="event-card__image">
+        {% else %}
+          <div class="event-card__placeholder">{{ evento.categoria.nombre }}</div>
+        {% endif %}
+        <div class="p-3">
+          <div class="d-flex justify-content-between gap-2 mb-2">
+            <span class="badge text-bg-light">{{ evento.categoria.nombre }}</span>
+            <span class="small text-secondary">{{ evento.fecha_inicio|date:'d M Y' }}</span>
+          </div>
+          <h2 class="h5">{{ evento.titulo }}</h2>
+          <p class="text-secondary small mb-3">{{ evento.descripcion|truncatewords:22 }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="small text-secondary">
+              <i class="bi bi-geo-alt"></i> {{ evento.ubicacion.ciudad }}
+            </span>
+            <a class="btn btn-outline-primary btn-sm" href="{% url 'detalle_evento' evento.pk %}">
+              Ver detalles
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+  {% empty %}
+    <div class="col-12">
+      <div class="empty-state">No hay eventos publicados con esos filtros.</div>
+    </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ evento.titulo }} | Eventix{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    <article class="detail-panel">
+      {% if evento.imagen_url %}
+        <img src="{{ evento.imagen_url }}" alt="{{ evento.titulo }}" class="detail-image">
+      {% endif %}
+      <div class="p-4">
+        <span class="badge text-bg-primary mb-2">{{ evento.categoria.nombre }}</span>
+        <h1 class="mb-3">{{ evento.titulo }}</h1>
+        <p class="lead text-secondary">{{ evento.descripcion }}</p>
+        <div class="row g-3 mt-2">
+          <div class="col-sm-6">
+            <div class="metric">
+              <span>Fecha</span>
+              <strong>{{ evento.fecha_inicio|date:'d M Y - h:i a' }}</strong>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="metric">
+              <span>Ubicacion</span>
+              <strong>{{ evento.ubicacion.nombre }}</strong>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="metric">
+              <span>Cupos disponibles</span>
+              <strong>{{ evento.cupos_disponibles }}</strong>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="metric">
+              <span>Ocupacion</span>
+              <strong>{{ evento.porcentaje_ocupacion }}%</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+  <aside class="col-lg-4">
+    <div class="side-panel">
+      <h2 class="h4 mb-3">Comprar entradas</h2>
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'comprar_entrada' evento.pk %}" class="vstack gap-3">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button class="btn btn-primary" type="submit">
+            <i class="bi bi-credit-card"></i> Crear orden
+          </button>
+        </form>
+      {% else %}
+        <p class="text-secondary">Inicia sesion para reservar y recibir tu QR.</p>
+        <a class="btn btn-primary w-100" href="{% url 'login' %}">Entrar</a>
+      {% endif %}
+      <hr>
+      <h3 class="h6">Tipos disponibles</h3>
+      <ul class="list-group list-group-flush">
+        {% for tipo in evento.tipos_entrada.all %}
+          <li class="list-group-item px-0 d-flex justify-content-between">
+            <span>{{ tipo.nombre }}</span>
+            <strong>${{ tipo.precio }}</strong>
+          </li>
+        {% empty %}
+          <li class="list-group-item px-0 text-secondary">No hay precios configurados.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </aside>
+</div>
+{% endblock %}
