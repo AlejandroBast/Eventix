@@ -16,10 +16,12 @@ SECRET_KEY = os.environ.get(
     'django-insecure-eventix-dev-key-change-me',
 )
 
+
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', '1') == '1'
 
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'aleybast.pythonanywhere.com' ,'localhost,127.0.0.1').split(',')
 
 
 # Application definition
